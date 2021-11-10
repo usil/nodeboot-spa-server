@@ -1,5 +1,11 @@
 # nodeboot-spa-server
 
+<img src="./coverage/badge-branches.svg">
+<img src="./coverage/badge-functions.svg">
+<img src="./coverage/badge-lines.svg">
+<img src="./coverage/badge-statements.svg">
+
+
 http server for any spa developed with react, angular, vue, etc with some few useful features
 
 ## Requirements
@@ -72,6 +78,12 @@ Then the result could be exposed to the entire spa with:
 - some javascript module or class
 - store or another advanced approach
 
+## General Steps To Work Locally With a Spa Framework
+
+- Install the [advanced settings package](https://github.com/nodeboot/advanced-settings): `npm install https://github.com/nodeboot/advanced-settings --save-dev`
+
+- Create a `settings.json` file
+
 ## Angular Guide (Angular 12)
 
 This guide was created in Angular 12 but as of november 9 2021 it should now work also on Angular 13, only replace `@angular-builders/custom-webpack@12.1.3` with `@angular-builders/custom-webpack`.
@@ -122,7 +134,7 @@ module.exports = options;
 ``` json
 "serve": {
       "options": {
-          "browserTarget": "my-project:build"
+          "browserTarget": "build"
       },
       "builder": "@angular-builders/custom-webpack:dev-server",
 }
@@ -157,7 +169,15 @@ fetch('/settings.json')
   })
 ```
 
-7. Finally modify your package.json scripts to look like:
+7. Add a `settings.json` file in the root. For more info about this file take a look at <https://github.com/nodeboot/advanced-settings/blob/main/README.md>
+
+``` json
+{
+  "serviceUrl": "http33ed",
+}
+```
+
+8. Finally modify your package.json scripts to look like:
 
 ```json
   "scripts": {
@@ -183,6 +203,12 @@ fetch('/settings.json')
       <br />
       <label><a href="http://jrichardsz.github.io/">JRichardsz</a></label>
       <br />
-    </td>    
+    </td>
+    <td>
+      <img src="https://i.ibb.co/88Tp6n5/Recurso-7.png" width="100px;"/>
+      <br />
+      <label><a href="https://github.com/TacEtarip">Luis Huertas</a></label>
+      <br />
+    </td>
   </tbody>
 </table>

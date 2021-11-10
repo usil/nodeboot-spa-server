@@ -1,0 +1,4 @@
+{"total": {"lines":{"total":48,"covered":48,"skipped":0,"pct":100},"statements":{"total":50,"covered":49,"skipped":0,"pct":98},"functions":{"total":10,"covered":9,"skipped":0,"pct":90},"branches":{"total":25,"covered":25,"skipped":0,"pct":100},"branchesTrue":{"total":0,"covered":0,"skipped":0,"pct":100}}
+,"D:\\usil\\userboot\\nodeboot-spa-server\\src\\lib\\argvs.js": {"lines":{"total":21,"covered":21,"skipped":0,"pct":100},"functions":{"total":5,"covered":5,"skipped":0,"pct":100},"statements":{"total":21,"covered":21,"skipped":0,"pct":100},"branches":{"total":17,"covered":17,"skipped":0,"pct":100}}
+,"D:\\usil\\userboot\\nodeboot-spa-server\\src\\server\\serve.js": {"lines":{"total":27,"covered":27,"skipped":0,"pct":100},"functions":{"total":5,"covered":4,"skipped":0,"pct":80},"statements":{"total":29,"covered":28,"skipped":0,"pct":96.55},"branches":{"total":8,"covered":8,"skipped":0,"pct":100}}
+}

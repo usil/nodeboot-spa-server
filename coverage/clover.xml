@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1636557478390" clover="3.2.0">
+  <project timestamp="1636557478390" name="All files">
+    <metrics statements="48" coveredstatements="48" conditionals="25" coveredconditionals="25" methods="10" coveredmethods="9" elements="83" coveredelements="82" complexity="0" loc="48" ncloc="48" packages="2" files="2" classes="2"/>
+    <package name="lib">
+      <metrics statements="21" coveredstatements="21" conditionals="17" coveredconditionals="17" methods="5" coveredmethods="5"/>
+      <file name="argvs.js" path="D:\usil\userboot\nodeboot-spa-server\src\lib\argvs.js">
+        <metrics statements="21" coveredstatements="21" conditionals="17" coveredconditionals="17" methods="5" coveredmethods="5"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="13" type="stmt"/>
+        <line num="3" count="13" type="stmt"/>
+        <line num="13" count="13" type="stmt"/>
+        <line num="14" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="20" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="27" count="13" type="stmt"/>
+        <line num="28" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="29" count="2" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="40" count="13" type="stmt"/>
+        <line num="41" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="44" count="13" type="stmt"/>
+        <line num="45" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="48" count="13" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="server">
+      <metrics statements="27" coveredstatements="27" conditionals="8" coveredconditionals="8" methods="5" coveredmethods="4"/>
+      <file name="serve.js" path="D:\usil\userboot\nodeboot-spa-server\src\server\serve.js">
+        <metrics statements="27" coveredstatements="27" conditionals="8" coveredconditionals="8" methods="5" coveredmethods="4"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="13" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="17" count="474" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="6" type="stmt"/>
+        <line num="22" count="4" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="26" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="28" count="36" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
+        <line num="39" count="4" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
