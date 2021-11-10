@@ -2,23 +2,21 @@
 
 http server for any spa developed with react, angular, vue, etc with some few useful features
 
-# Requirements
+## Requirements
 
 - nodejs >= 10
 
-# Usage
+## Usage
 
 If you have the result of your spa build, you just need install this server
 
+``` cmd
+npm install nodeboot-spa-server --save
 ```
-npm install nodeboot-spa-server --save"
-```
 
+Add this script to you package.json
 
-and add this script to you package.json
-
-
-```
+``` json
 "start" : "nodeboot-spa-server dist"
 ```
 
@@ -31,7 +29,21 @@ Where dist is the folder where your build assets were created:
 
 If you are using another framework, just set any folder that you need. This folder should be in the default workspace  
 
-# Features
+## Options
+
+Use `nodeboot-spa-server -h` to show the list.
+
+``` text
+    p: 'PORT of the app, abbreviated', 
+    port: 'PORT of the app', 
+    d: 'Path to app static files, abbreviated', 
+    dir: 'Path to app static files', 
+    s: 'Path to the settings file, abbreviated', 
+    settings: 'Path to the settings file',
+    allow-routes: 'Use allow-routes serving for routing'
+```
+
+## Features
 
 ### /settings.json
 
@@ -42,7 +54,7 @@ Get your settings from an http endpoint which is exposed by this framework, read
 
 Just export some variables with prefix: **SPA_VAR_**
 
-```
+``` cmd
 export SPA_VAR_FOO=foo_value
 export SPA_VAR_BAR=bar_value
 ```
@@ -60,11 +72,109 @@ Then the result could be exposed to the entire spa with:
 - some javascript module or class
 - store or another advanced approach
 
-# License
+## Angular Guide (Angular 12)
+
+This guide was created in Angular 12 but as of november 9 2021 it should now work also on Angular 13, only replace `@angular-builders/custom-webpack@12.1.3` with `@angular-builders/custom-webpack`.
+
+1. First create a new project: `ng new <project-name>`.
+2. Then run: `npm i -D @angular-builders/custom-webpack@12.1.3`.
+3. Run: `npm install https://github.com/nodeboot/advanced-settings --save-dev`
+4. Create a `custom-webpack.config.js`:.
+
+``` javascript
+const EnvSettings = require('advanced-settings').EnvSettings;
+const envSettings = new EnvSettings();
+
+const options = {
+  devServer: {
+    before: (devServer) => {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+
+      devServer.get('/settings.json', function (req, res) {
+        const settings = envSettings.loadJsonFileSync('./settings.json');
+        res.json(settings);
+      });
+    },
+  },
+}
+
+module.exports = options;
+```
+
+5. In your `angular.json` file add/replace:
+
+``` json
+"architect": {
+
+        "build": {
+            "builder": "@angular-builders/custom-webpack:browser",
+        },
+        "options": {
+            "customWebpackConfig": {
+                "path": "./custom-webpack.config.js"
+            }
+        },
+}
+```
+
+``` json
+"serve": {
+      "options": {
+          "browserTarget": "my-project:build"
+      },
+      "builder": "@angular-builders/custom-webpack:dev-server",
+}
+```
+
+6. Modify your main.ts to look like:
+
+``` typescript
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+fetch('/settings.json')
+  .then((response) => response.json())
+  .then((config) => {
+    if (environment.production) {
+      enableProdMode();
+    }
+
+    environment.url = config.serviceUrl;
+
+    platformBrowserDynamic().bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+
+  }).catch(error => {
+    console.log(error);
+
+    platformBrowserDynamic().bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+  })
+```
+
+7. Finally modify your package.json scripts to look like:
+
+```json
+  "scripts": {
+    "ng": "ng",
+    "dev": "ng serve",
+    "start": "nodeboot-spa-server dist/test-setting-hack -s settings.json -p 2000 --allow-routes",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+```
+
+## License
 
 [MIT](./LICENSE)
 
-# Contributors
+## Contributors
 
 <table>
   <tbody>
