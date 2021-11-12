@@ -7,7 +7,7 @@
     "nodeboot-spa-server": "src/server/SpaServer.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose --silent --collectCoverage"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,16 @@
   },
   "homepage": "https://github.com/nodeboot/nodeboot-spa-server#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "advanced-settings": "git+https://github.com/nodeboot/advanced-settings.git",
+    "colors": "^1.4.0",
+    "express": "^4.17.1",
+    "jest-coverage-badges": "^1.1.2",
+    "minimist": "^1.2.5",
+    "portfinder": "^1.0.28"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^27.3.1",
+    "supertest": "^6.1.6"
   }
 }
