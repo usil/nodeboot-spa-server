@@ -47,20 +47,20 @@ If you are using another framework, just set any folder that you need. This fold
 
 ## Parameters
 
-| parameter      | description                                                                 |
-| -------------- | --------------------------------------------------------------------------- |
-| -p             | port of the server. Default 8080. Long: -port                               |
-| -d             | folder with assets of build operation: index.html, etc. Long: -dir          |
-| -s             | path of file with variables in json format. Long: -settings                 |
-| --allow-routes | used for angular or any spa wich hits the server for html instead pure ajax |
-| --https        | use https for sessions                                                      |
-| --oauth2       | activate oauth2                                                             |
+| parameter      | description                                                                  |
+| -------------- | ---------------------------------------------------------------------------- |
+| -p             | port of the server. Default 8080. Long: -port                                |
+| -d             | folder with assets of build operation: index.html, etc. Long: -dir           |
+| -s             | path of file with variables in json format. Long: -settings                  |
+| --allow-routes | used for angular or any spa which hits the server for html instead pure ajax |
+| --https        | use https for sessions                                                       |
+| --oauth2       | activate oauth2                                                              |
 
 Use `nodeboot-spa-server -h` to show the list in the shell.
 
 Here an example for angular, with variables in config.json, port 9000 and allowed routes
 
-```
+```json
 "start": "nodeboot-spa-server dist -s config.json -p 9000 --allow-routes",
 ```
 
@@ -119,16 +119,16 @@ Then the result could be exposed to the entire spa with:
 
 Instead of prefix your variables with **SPA*VAR***, inspired on the [java spring boot framework](https://stackoverflow.com/a/35535138/3957754), you could create a **settings.json** file at the root with these values:
 
-```
+```json
 {
- "foo" : "bar",
- "employeeApiBaseUrl" : "${EMPLOYEE_API_BASE_URL}"
+  "foo": "bar",
+  "employeeApiBaseUrl": "${EMPLOYEE_API_BASE_URL}"
 }
 ```
 
 Just ensure that that variable exist before the start of server:
 
-```
+```txt
 #linux
 export EMPLOYEE_API_BASE_URL=https://employee-api.com
 
@@ -138,22 +138,28 @@ set EMPLOYEE_API_BASE_URL=https://employee-api.com
 
 Add the **-s settings.json** parameter:
 
-```
+```json
 "start": "nodeboot-spa-server dist -s settings.json -p 9000 --allow-routes",
 ```
 
 Then start the spa server `npm run start` and this framework, will evaluate the variable syntax and expose you this json:
 
-```
+```json
 {
- "foo" : "bar",
- "employeeApiBaseUrl" : "https://employee-api.com"
+  "foo": "bar",
+  "employeeApiBaseUrl": "https://employee-api.com"
 }
 ```
 
-## Oauth2 settings with a home page
+## Adding oauth2
 
-Take in consideration that everting inside server will not be shown in the `settings.json` endpoint.
+Start your spa with `nodeboot-spa-server dist -s config.json -p 9000 --allow-routes --oauth2`.
+
+### Oauth2 settings with a home page
+
+Take in consideration that everting inside server will not be shown in the `settings.json` endpoint. You will need to use the auto generated endpoints.
+
+The auth information result is showed in the `settings.json` end point with `signedUserDetails`.
 
 ```json
 {
@@ -169,9 +175,14 @@ Take in consideration that everting inside server will not be shown in the `sett
 }
 ```
 
-You will get the '/oauth2/login' endpoint to realize an automatic login.
+### Added end points for oauth2
 
-## Oauth2 settings no home page
+| Endpoint       | Method | Description         |
+| -------------- | ------ | ------------------- |
+| /oauth2/logout | GET    | Closes the session  |
+| /oauth2/login  | GET    | Creates the session |
+
+### Oauth2 settings no home page
 
 Any request to any end point will activate the automatic login.
 
