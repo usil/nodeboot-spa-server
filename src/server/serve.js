@@ -33,7 +33,8 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
     const renderController = RenderController(
       allowedExt,
       processFolderPath,
-      argvSettings.staticFolderName
+      argvSettings.staticFolderName,
+      settings
     );
 
     const oauth2Controller = Oauth2Controller(settings);
@@ -41,9 +42,11 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
     if (argvSettings.useOauth2) {
       oauth2Controller.configureSession(app, argvSettings.useHttps);
 
+      app.get("/oauth2/callback", oauth2Controller.callback);
+
       app.get("/oauth2/logout", oauth2Controller.logOut);
 
-      app.get("/oauth2/callback", oauth2Controller.callback);
+      app.get("/oauth2/login", oauth2Controller.logIn);
     }
 
     app.get("/settings.json", renderController.renderSettingJson);

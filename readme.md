@@ -20,7 +20,7 @@ simple http server for any spa developed with react, angular, vue, etc with some
 
 If you have the result of your spa build, you just need install this server
 
-``` cmd
+```cmd
 npm install https://github.com/usil/nodeboot-spa-server.git
 ```
 
@@ -43,18 +43,18 @@ Where **my-folder** is the folder where your build assets are created:
 "start" : "nodeboot-spa-server dist/acme"
 ```
 
-
 If you are using another framework, just set any folder that you need. This folder should be in the default workspace and at least contain the classic **index.html**
 
 ## Parameters
 
-
-|parameter|description|
-|--------|---------|
-|-p |port of the server. Default 8080. Long: -port|
-|-d |folder with assets of build operation: index.html, etc. Long: -dir|
-|-s |path of file with variables in json format. Long: -settings|
-|--allow-routes | used for angular or any spa wich hits the server for html instead pure ajax|
+| parameter      | description                                                                 |
+| -------------- | --------------------------------------------------------------------------- |
+| -p             | port of the server. Default 8080. Long: -port                               |
+| -d             | folder with assets of build operation: index.html, etc. Long: -dir          |
+| -s             | path of file with variables in json format. Long: -settings                 |
+| --allow-routes | used for angular or any spa wich hits the server for html instead pure ajax |
+| --https        | use https for sessions                                                      |
+| --oauth2       | activate oauth2                                                             |
 
 Use `nodeboot-spa-server -h` to show the list in the shell.
 
@@ -83,7 +83,7 @@ That means that if one build was tested for Q&A team, another build is required 
 
 **How we solve this?**
 
-- What if your spa don't need the internal static variables (environment.ts, REACT_APP_, etc)?
+- What if your spa don't need the internal static variables (environment.ts, REACT*APP*, etc)?
 - How your spa knows what is the testing http endpoint of employees microservice?
 
 **Solution:** Load the settings of the spa at the start of spa, consuming an http endpoint which returns a json with your required variables. Then just expose them to the rest of your spa modules, classes, etc
@@ -92,7 +92,7 @@ This framework exposes an http endpoint ready to use at the same domain of the s
 
 Values are read from environment variables, exactly like [create-react-app](https://create-react-app.dev/docs/adding-custom-environment-variables/) but for general purpose.
 
-Just export some variables with prefix: **SPA_VAR_**
+Just export some variables with prefix: **SPA*VAR***
 
 ```cmd
 export SPA_VAR_FOO=foo_value
@@ -117,7 +117,7 @@ Then the result could be exposed to the entire spa with:
 
 ## /settings.json advanced
 
-Instead of prefix your variables with **SPA_VAR_**, inspired on the [java spring boot framework](https://stackoverflow.com/a/35535138/3957754), you could create a **settings.json** file at the root with these values:
+Instead of prefix your variables with **SPA*VAR***, inspired on the [java spring boot framework](https://stackoverflow.com/a/35535138/3957754), you could create a **settings.json** file at the root with these values:
 
 ```
 {
@@ -142,7 +142,7 @@ Add the **-s settings.json** parameter:
 "start": "nodeboot-spa-server dist -s settings.json -p 9000 --allow-routes",
 ```
 
-Then start the spa server `npm run start` and  this framework, will evaluate the variable syntax and expose you this json:
+Then start the spa server `npm run start` and this framework, will evaluate the variable syntax and expose you this json:
 
 ```
 {
@@ -151,6 +151,42 @@ Then start the spa server `npm run start` and  this framework, will evaluate the
 }
 ```
 
+## Oauth2 settings with a home page
+
+Take in consideration that everting inside server will not be shown in the `settings.json` endpoint.
+
+```json
+{
+  "server": {
+    "cookieMaxAge": 60000,
+    "homePath": "/home",
+    "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
+    "sessionSecret": "${SESSION_SECRET}",
+    "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
+    "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
+    "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
+  }
+}
+```
+
+You will get the '/oauth2/login' endpoint to realize an automatic login.
+
+## Oauth2 settings no home page
+
+Any request to any end point will activate the automatic login.
+
+```json
+{
+  "server": {
+    "cookieMaxAge": 60000,
+    "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
+    "sessionSecret": "${SESSION_SECRET}",
+    "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
+    "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
+    "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
+  }
+}
+```
 
 ## /settings.json at developer stage
 
@@ -166,7 +202,7 @@ Follow these steps to configure a /settings.json at developer stage:
 
 ```json
 {
-  "serviceUrl": "http://acme-api.com",
+  "serviceUrl": "http://acme-api.com"
 }
 ```
 

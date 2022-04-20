@@ -1,5 +1,12 @@
 {
-  "serviceUrl": "http33ed",
-  "someSecret": "secret",
-  "toggle": true
+  "foo": "foo",
+  "server": {
+    "cookieMaxAge": 60000,
+    "homePath": "/home",
+    "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
+    "sessionSecret": "${SESSION_SECRET}",
+    "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
+    "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
+    "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
+  }
 }

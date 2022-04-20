@@ -8,14 +8,30 @@ const Oauth2Controller = (settings) => {
       if (err) {
         return res.send(err);
       }
-      res.redirect("/");
+      res.redirect(settings.server.homePath || "/");
     });
+  };
+
+  const logIn = async (req, res) => {
+    try {
+      if (req.session.signedUserDetails) {
+        return res.redirect(settings.server.homePath || "/");
+      }
+      const authorizationResponse = await axios.post(
+        `${settings.server.oauth2BaseUrl}/${settings.server.oauth2AuthorizeUrl}`,
+        { clientId: settings.server.oauth2ClientId }
+      );
+      return res.status(302).redirect(authorizationResponse.data.content.url);
+    } catch (error) {
+      console.log(colors.red(error));
+      return res.send(error.message);
+    }
   };
 
   const callback = async (req, res) => {
     try {
       if (req.session.signedUserDetails) {
-        return res.redirect("/");
+        return res.redirect(settings.server.homePath || "/");
       }
 
       const processResponse = await axios.post(
@@ -25,7 +41,7 @@ const Oauth2Controller = (settings) => {
 
       if (processResponse.status === 200) {
         req.session.signedUserDetails = { ...processResponse.data.content };
-        return res.redirect("/");
+        return res.redirect(settings.server.homePath || "/");
       }
 
       // TODO add error page
@@ -39,10 +55,17 @@ const Oauth2Controller = (settings) => {
 
   const oauth2Protection = async (req, res, next) => {
     try {
+      if (req.baseUrl + req.path === settings.server.homePath) {
+        return next();
+      }
+
       if (!req.session.signedUserDetails) {
+        if (settings.server.homePath) {
+          return res.redirect(settings.server.homePath);
+        }
         const authorizationResponse = await axios.post(
           `${settings.server.oauth2BaseUrl}/${settings.server.oauth2AuthorizeUrl}`,
-          { token: settings.server.token }
+          { clientId: settings.server.oauth2ClientId }
         );
         return res.status(302).redirect(authorizationResponse.data.content.url);
       }
@@ -72,7 +95,7 @@ const Oauth2Controller = (settings) => {
     app.use(session(sessionSettings));
   };
 
-  return { logOut, callback, oauth2Protection, configureSession };
+  return { logOut, callback, oauth2Protection, configureSession, logIn };
 };
 
 module.exports = Oauth2Controller;

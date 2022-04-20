@@ -1,6 +1,6 @@
 const path = require("path");
 
-const helperMiddlewares = (
+const renderController = (
   allowedExt,
   processFolderPath,
   staticPath,
@@ -19,6 +19,7 @@ const helperMiddlewares = (
   };
 
   const renderSettingJson = (req, res) => {
+    console.log(settings);
     const exposedSettings = {
       ...settings,
       signedUserDetails: req.session
@@ -32,4 +33,4 @@ const helperMiddlewares = (
   return { allowedRoutesRender, renderSettingJson };
 };
 
-module.exports = helperMiddlewares;
+module.exports = renderController;
