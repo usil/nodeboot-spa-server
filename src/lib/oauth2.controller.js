@@ -18,7 +18,7 @@ const Oauth2Controller = (settings) => {
         return res.redirect(settings.server.homePath || "/");
       }
       const authorizationResponse = await axios.post(
-        `${settings.server.oauth2BaseUrl}/${settings.server.oauth2AuthorizeUrl}`,
+        `${settings.server.oauth2BaseUrl}${settings.server.oauth2AuthorizeUrl}`,
         { clientId: settings.server.oauth2ClientId }
       );
       return res.status(302).redirect(authorizationResponse.data.content.url);
@@ -35,12 +35,20 @@ const Oauth2Controller = (settings) => {
       }
 
       const processResponse = await axios.post(
-        `${settings.server.oauth2BaseUrl}/${settings.server.oauth2CallbackProcessor}`,
-        { ...req.query }
+        `${settings.server.oauth2BaseUrl}${settings.server.oauth2TokenUserEndpoint}`,
+        {
+          authorizationCode: req.query.code,
+          grantType: "authorization_code",
+          clientId: settings.server.oauth2ClientId,
+          applicationIdentifier: settings.server.applicationIdentifier,
+        }
       );
 
       if (processResponse.status === 200) {
-        req.session.signedUserDetails = { ...processResponse.data.content };
+        req.session.signedUserDetails = {
+          ...processResponse.data.content,
+          generatedAt: Date.now(),
+        };
         return res.redirect(settings.server.homePath || "/");
       }
 
@@ -64,7 +72,7 @@ const Oauth2Controller = (settings) => {
           return res.redirect(settings.server.homePath);
         }
         const authorizationResponse = await axios.post(
-          `${settings.server.oauth2BaseUrl}/${settings.server.oauth2AuthorizeUrl}`,
+          `${settings.server.oauth2BaseUrl}${settings.server.oauth2AuthorizeUrl}`,
           { clientId: settings.server.oauth2ClientId }
         );
         return res.status(302).redirect(authorizationResponse.data.content.url);
