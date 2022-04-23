@@ -87,6 +87,13 @@ const Oauth2Controller = (settings) => {
         settings.server.publicPages.indexOf(completeRequestUrl);
 
       if (
+        completeRequestUrl === settings.server.loginPage &&
+        req.session.signedUserDetails
+      ) {
+        return res.redirect(settings.server.successPage || "/");
+      }
+
+      if (
         completeRequestUrl === settings.server.loginPage ||
         completeRequestUrl === settings.server.errorPage ||
         indexInPublicPages > -1 ||
