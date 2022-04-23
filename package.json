@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/nodeboot/nodeboot-spa-server/issues"
   },
-  "homepage": "https://github.com/nodeboot/nodeboot-spa-server#readme",
+  "homePage": "https://github.com/nodeboot/nodeboot-spa-server#readme",
   "dependencies": {
     "advanced-settings": "git+https://github.com/nodeboot/advanced-settings.git",
     "axios": "^0.26.1",

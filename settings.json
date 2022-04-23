@@ -2,7 +2,10 @@
   "foo": "foo",
   "server": {
     "cookieMaxAge": 60000,
-    "homePath": "/home",
+    "errorPage": "/error",
+    "loginPage": "/login",
+    "successPage": "/success",
+    "publicPages": [],
     "applicationIdentifier": "web1",
     "oauth2TimerRefreshInterval": "${SECURITY_OAUTH2_TIME_INTERVAL}",
     "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",

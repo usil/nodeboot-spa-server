@@ -161,15 +161,23 @@ Take in consideration that everting inside server will not be shown in the `sett
 
 The auth information result is showed in the `settings.json` end point with `signedUserDetails`.
 
+You should enter the success page where, it will go after the successfully login.
+
 ```json
 {
   "server": {
     "cookieMaxAge": 60000,
-    "homePath": "/home",
+    "loginPage": "/login",
+    "errorPage": "/error",
+    "successPage": "/success",
+    "publicPages": [],
+    "applicationIdentifier": "web1",
+    "oauth2TimerRefreshInterval": "${SECURITY_OAUTH2_TIME_INTERVAL}",
+    "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
     "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
     "sessionSecret": "${SESSION_SECRET}",
     "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-    "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
+    "oauth2TokenUserEndpoint": "${SECURITY_OAUTH2_TOKEN_USER_URL}",
     "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
   }
 }
@@ -184,12 +192,14 @@ The auth information result is showed in the `settings.json` end point with `sig
 
 ### Oauth2 settings no home page
 
-Any request to any end point will activate the automatic login.
+Any request to any end point will activate the automatic login. Just do not include the login page.
 
 ```json
 {
   "server": {
     "cookieMaxAge": 60000,
+    "errorPage": "/error",
+    "successPage": "/success",
     "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
     "sessionSecret": "${SESSION_SECRET}",
     "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
