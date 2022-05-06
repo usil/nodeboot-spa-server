@@ -12,6 +12,7 @@ const helpers = (_colors) => {
         message: error.message,
       };
     }
+    console.log(error);
     log.error(error);
     if (errorPage) {
       return res.redirect(errorPage + `?code=500`);
