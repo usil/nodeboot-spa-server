@@ -9,6 +9,8 @@ const express = require("express");
 const RenderController = require("../lib/render.controller");
 const Oauth2Controller = require("../lib/oauth2.controller");
 const envSettings = new EnvSettings();
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({ name: "spa-server" });
 
 const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
   try {
@@ -85,11 +87,9 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
       );
     }
 
-    const server = app.listen(argvSettings.port, () =>
-      console.log(
-        colors.blue(`Listening in http://localhost:${argvSettings.port}`)
-      )
-    );
+    const server = app.listen(argvSettings.port, () => {
+      log.info(`Listening in http://localhost:${argvSettings.port}`);
+    });
 
     return { server, app };
   } catch (error) {

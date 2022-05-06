@@ -42,10 +42,12 @@ const renderController = (
 
       const expiresAt = expiresIn + generatedAt;
 
-      const intervals = serverSettings.oauth2TimerRefreshInterval.split(":");
+      const preInterval =
+        parseInt(serverSettings.oauth2RefreshTokenBeforeExpirationTime) * 1000;
 
-      const preInterval = parseInt(intervals[0]) * 1000;
-      const postInterval = parseInt(intervals[1]) * 1000;
+      const postInterval =
+        parseInt(serverSettings.oauth2MaxAllowedIdleTime) * 1000;
+
       const updatedSessionAt = req.session.signedUserDetails.updatedSessionAt;
 
       const now = Date.now();
@@ -70,13 +72,7 @@ const renderController = (
         now >= expiresAt - preInterval &&
         updatedSessionAt + postInterval >= now
       ) {
-        log.info(`Refreshed`, {
-          now,
-          expiresAt,
-          preInterval,
-          postInterval,
-          updatedSessionAt,
-        });
+        log.info();
 
         const refreshResponse = await axios.post(
           `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2RefreshTokenUrl}`,
@@ -87,8 +83,7 @@ const renderController = (
         );
 
         req.session.signedUserDetails.tokenStatus = "renewed";
-        req.session.signedUserDetails.tokenStatus =
-          req.session.signedUserDetails.generatedAt = Date.now();
+        req.session.signedUserDetails.generatedAt = Date.now();
         req.session.signedUserDetails.accessToken =
           refreshResponse.data.content.accessToken;
         req.session.signedUserDetails.expiresIn =
