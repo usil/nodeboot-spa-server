@@ -47,13 +47,3 @@ const allowedExt = [
 ];
 
 startServer(app, allowedExt, settings, argv["allow-routes"]);
-
-process.on("SIGINT", function () {
-  console.log(colors.red("Server stopped."));
-  process.exit();
-});
-
-process.on("SIGTERM", function () {
-  console.log(colors.red("Server stopped."));
-  process.exit();
-});

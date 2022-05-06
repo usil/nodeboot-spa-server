@@ -5,7 +5,7 @@ const Helpers = require("./helpers");
 
 const helpers = Helpers(colors);
 
-const Oauth2Controller = (serverSettings) => {
+const Oauth2Controller = (serverSettings, log) => {
   const logOut = (req, res) => {
     req.session.destroy((err) => {
       if (err) {
@@ -26,7 +26,7 @@ const Oauth2Controller = (serverSettings) => {
       );
       return res.status(302).redirect(authorizationResponse.data.content.url);
     } catch (error) {
-      helpers.handleAxiosError(error, res, serverSettings.errorPage);
+      helpers.handleAxiosError(error, res, log, serverSettings.errorPage);
     }
   };
 
@@ -60,7 +60,7 @@ const Oauth2Controller = (serverSettings) => {
 
       return res.json(processResponse.data);
     } catch (error) {
-      helpers.handleAxiosError(error, res, serverSettings.errorPage);
+      helpers.handleAxiosError(error, res, log, serverSettings.errorPage);
     }
   };
 
@@ -114,7 +114,7 @@ const Oauth2Controller = (serverSettings) => {
       }
       next();
     } catch (error) {
-      helpers.handleAxiosError(error, res, serverSettings.errorPage);
+      helpers.handleAxiosError(error, res, log, serverSettings.errorPage);
     }
   };
 

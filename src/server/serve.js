@@ -10,12 +10,25 @@ const RenderController = require("../lib/render.controller");
 const Oauth2Controller = require("../lib/oauth2.controller");
 const envSettings = new EnvSettings();
 const bunyan = require("bunyan");
-const log = bunyan.createLogger({ name: "spa-server" });
+const log = bunyan.createLogger({
+  name: "spa-server",
+  serializers: bunyan.stdSerializers,
+});
 
 const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
   try {
     let settings = {};
     let serverSettings = {};
+
+    process.on("SIGINT", function () {
+      log.warn("Server stopped.");
+      process.exit();
+    });
+
+    process.on("SIGTERM", function () {
+      log.warn("Server stopped.");
+      process.exit();
+    });
 
     if (argvSettings.settingsPath) {
       settings = await envSettings.loadJsonFile(
@@ -45,10 +58,11 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
       processFolderPath,
       argvSettings.staticFolderName,
       settings,
-      serverSettings
+      serverSettings,
+      log
     );
 
-    const oauth2Controller = Oauth2Controller(serverSettings);
+    const oauth2Controller = Oauth2Controller(serverSettings, log);
 
     if (argvSettings.useOauth2) {
       oauth2Controller.configureSession(app, argvSettings.useHttps);
@@ -93,7 +107,7 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
 
     return { server, app };
   } catch (error) {
-    console.log(colors.red(error));
+    log.error(error);
     process.exit(-1);
   }
 };

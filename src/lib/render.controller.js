@@ -2,8 +2,6 @@ const colors = require("colors/safe");
 const path = require("path");
 const axios = require("axios").default;
 const Helpers = require("./helpers");
-const bunyan = require("bunyan");
-const log = bunyan.createLogger({ name: "spa-server" });
 
 const helpers = Helpers(colors);
 
@@ -12,7 +10,8 @@ const renderController = (
   processFolderPath,
   staticPath,
   settings,
-  serverSettings
+  serverSettings,
+  log
 ) => {
   const allowedRoutesRender = (req, res) => {
     if (allowedExt.filter((ext) => req.url.indexOf(ext) > 0).length > 0) {
@@ -103,7 +102,7 @@ const renderController = (
 
       return res.json(exposedSettings);
     } catch (error) {
-      helpers.handleAxiosError(error, res);
+      helpers.handleAxiosError(error, res, log);
     }
   };
 
