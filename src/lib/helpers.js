@@ -1,4 +1,7 @@
-const helpers = (colors) => {
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({ name: "spa-server" });
+
+const helpers = (_colors) => {
   const handleAxiosError = (error, res, errorPage) => {
     let errorData = {};
     if (error.response) {
@@ -12,7 +15,7 @@ const helpers = (colors) => {
         message: error.message,
       };
     }
-    console.log(colors.red(error));
+    log.emit(errorData);
     if (errorPage) {
       return res.redirect(errorPage + `?code=500`);
     }

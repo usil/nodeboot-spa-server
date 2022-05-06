@@ -2,6 +2,8 @@ const colors = require("colors/safe");
 const path = require("path");
 const axios = require("axios").default;
 const Helpers = require("./helpers");
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({ name: "spa-server" });
 
 const helpers = Helpers(colors);
 
@@ -68,6 +70,14 @@ const renderController = (
         now >= expiresAt - preInterval &&
         updatedSessionAt + postInterval >= now
       ) {
+        log.info(`Refreshed`, {
+          now,
+          expiresAt,
+          preInterval,
+          postInterval,
+          updatedSessionAt,
+        });
+
         const refreshResponse = await axios.post(
           `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2RefreshTokenUrl}`,
           {
