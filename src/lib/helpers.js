@@ -4,7 +4,7 @@ const helpers = (_colors) => {
     if (error.response) {
       errorData = {
         message: error.message,
-        responseData: error.response.data,
+        errorResponse: error.response.data,
         requestHeaders: error.response.headers,
       };
     } else {
@@ -12,7 +12,7 @@ const helpers = (_colors) => {
         message: error.message,
       };
     }
-    log.error(error);
+    console.log(error);
     log.error(errorData);
     if (errorPage) {
       return res.redirect(errorPage + `?code=500`);
