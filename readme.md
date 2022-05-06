@@ -157,29 +157,27 @@ Start your spa with `nodeboot-spa-server dist -s config.json -p 9000 --allow-rou
 
 ### Oauth2 settings with a home page
 
-Take in consideration that everting inside server will not be shown in the `settings.json` endpoint. You will need to use the auto generated endpoints.
-
 The auth information result is showed in the `settings.json` end point with `signedUserDetails`.
 
-You should enter the success page where, it will go after the successfully login.
+You should enter the success page where it will go after the successfully login.
+
+You need to create a `server-settings.json` file with the following variables:
 
 ```json
 {
-  "server": {
-    "cookieMaxAge": 60000,
-    "loginPage": "/login",
-    "errorPage": "/error",
-    "successPage": "/success",
-    "publicPages": [],
-    "applicationIdentifier": "web1",
-    "oauth2TimerRefreshInterval": "${SECURITY_OAUTH2_TIME_INTERVAL}",
-    "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
-    "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
-    "sessionSecret": "${SESSION_SECRET}",
-    "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-    "oauth2TokenUserEndpoint": "${SECURITY_OAUTH2_TOKEN_USER_URL}",
-    "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
-  }
+  "cookieMaxAge": 60000,
+  "loginPage": "/login",
+  "errorPage": "/error",
+  "successPage": "/success",
+  "publicPages": [],
+  "applicationIdentifier": "web1",
+  "oauth2TimerRefreshInterval": "${SECURITY_OAUTH2_TIME_INTERVAL}",
+  "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
+  "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
+  "sessionSecret": "${SESSION_SECRET}",
+  "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
+  "oauth2TokenUserEndpoint": "${SECURITY_OAUTH2_TOKEN_USER_URL}",
+  "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
 }
 ```
 
@@ -194,18 +192,18 @@ You should enter the success page where, it will go after the successfully login
 
 Any request to any end point will activate the automatic login. Just do not include the login page.
 
+You need to create a `server-settings.json` file with the following variables:
+
 ```json
 {
-  "server": {
-    "cookieMaxAge": 60000,
-    "errorPage": "/error",
-    "successPage": "/success",
-    "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
-    "sessionSecret": "${SESSION_SECRET}",
-    "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-    "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
-    "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
-  }
+  "cookieMaxAge": 60000,
+  "errorPage": "/error",
+  "successPage": "/success",
+  "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
+  "sessionSecret": "${SESSION_SECRET}",
+  "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
+  "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
+  "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
 }
 ```
 
@@ -230,7 +228,7 @@ Follow these steps to configure a /settings.json at developer stage:
 Specific configurations by framework:
 
 - Angular 12 & 13
-  - https://github.com/usil/nodeboot-spa-server/wiki/Dev-Mode-:-Angular-12
+- https://github.com/usil/nodeboot-spa-server/wiki/Dev-Mode-:-Angular-12
 
 ## License
 

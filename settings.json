@@ -1,18 +1,3 @@
 {
-  "foo": "foo",
-  "server": {
-    "cookieMaxAge": 60000,
-    "errorPage": "/error",
-    "loginPage": "/login",
-    "successPage": "/success",
-    "publicPages": [],
-    "applicationIdentifier": "web1",
-    "oauth2TimerRefreshInterval": "${SECURITY_OAUTH2_TIME_INTERVAL}",
-    "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
-    "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
-    "sessionSecret": "${SESSION_SECRET}",
-    "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-    "oauth2TokenUserEndpoint": "${SECURITY_OAUTH2_TOKEN_USER_URL}",
-    "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
-  }
+  "foo": "foo"
 }

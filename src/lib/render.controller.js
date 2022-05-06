@@ -9,7 +9,8 @@ const renderController = (
   allowedExt,
   processFolderPath,
   staticPath,
-  settings
+  settings,
+  serverSettings
 ) => {
   const allowedRoutesRender = (req, res) => {
     if (allowedExt.filter((ext) => req.url.indexOf(ext) > 0).length > 0) {
@@ -29,7 +30,6 @@ const renderController = (
         const normalSettings = {
           ...settings,
         };
-        delete normalSettings["server"];
         return res.json(normalSettings);
       }
 
@@ -40,7 +40,7 @@ const renderController = (
 
       const expiresAt = expiresIn + generatedAt;
 
-      const intervals = settings.server.oauth2TimerRefreshInterval.split(":");
+      const intervals = serverSettings.oauth2TimerRefreshInterval.split(":");
 
       const preInterval = parseInt(intervals[0]) * 1000;
       const postInterval = parseInt(intervals[1]) * 1000;
@@ -49,17 +49,18 @@ const renderController = (
       const now = Date.now();
 
       if (updatedSessionAt + postInterval < now) {
-        const destroy$ = new Promise((resolve, reject) => {
-          req.session.destroy((err) => {
-            if (err) {
-              reject(err);
-            }
-            resolve();
+        const destroy$ = () => {
+          return new Promise((resolve, reject) => {
+            req.session.destroy((err) => {
+              if (err) {
+                reject(err);
+              }
+              resolve();
+            });
           });
-        });
-        await destroy$;
+        };
+        await destroy$();
         const expiredSettings = { ...settings };
-        delete expiredSettings["server"];
         return res.json(expiredSettings);
       }
 
@@ -68,7 +69,7 @@ const renderController = (
         updatedSessionAt + postInterval >= now
       ) {
         const refreshResponse = await axios.post(
-          `${settings.server.oauth2BaseUrl}${settings.server.oauth2RefreshTokenUrl}`,
+          `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2RefreshTokenUrl}`,
           {
             refreshToken: req.session.signedUserDetails.refreshToken,
             grantType: "refresh_token",
@@ -93,7 +94,6 @@ const renderController = (
         signedUserDetails: req.session.signedUserDetails,
       };
 
-      delete exposedSettings["server"];
       delete exposedSettings["signedUserDetails"]["refreshToken"];
 
       return res.json(exposedSettings);

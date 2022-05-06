@@ -15,6 +15,7 @@ const settings = {
   staticFolderName: argvs().getStaticDirName(argv),
   port: argvs().getPort(argv),
   settingsPath: argvs().setSettingsPath(argv),
+  serverSettingsPath: argvs().setServerSettingsPath(argv),
   useOauth2: argvs().useOauth2(argv),
   useHttps: argvs().useHttps(argvs),
 };

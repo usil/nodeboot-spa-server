@@ -5,44 +5,44 @@ const Helpers = require("./helpers");
 
 const helpers = Helpers(colors);
 
-const Oauth2Controller = (settings) => {
+const Oauth2Controller = (serverSettings) => {
   const logOut = (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         return res.send(err);
       }
-      res.redirect(settings.server.loginPage || "/");
+      res.redirect(serverSettings.loginPage || "/");
     });
   };
 
   const logIn = async (req, res) => {
     try {
       if (req.session.signedUserDetails) {
-        return res.redirect(settings.server.successPage || "/");
+        return res.redirect(serverSettings.successPage || "/");
       }
       const authorizationResponse = await axios.post(
-        `${settings.server.oauth2BaseUrl}${settings.server.oauth2AuthorizeUrl}`,
-        { clientId: settings.server.oauth2ClientId }
+        `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2AuthorizeUrl}`,
+        { clientId: serverSettings.oauth2ClientId }
       );
       return res.status(302).redirect(authorizationResponse.data.content.url);
     } catch (error) {
-      helpers.handleAxiosError(error, res, settings.server.errorPage);
+      helpers.handleAxiosError(error, res, serverSettings.errorPage);
     }
   };
 
   const callback = async (req, res) => {
     try {
       if (req.session.signedUserDetails) {
-        return res.redirect(settings.server.loginPage || "/");
+        return res.redirect(serverSettings.loginPage || "/");
       }
 
       const processResponse = await axios.post(
-        `${settings.server.oauth2BaseUrl}${settings.server.oauth2TokenUserEndpoint}`,
+        `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2TokenUserEndpoint}`,
         {
           authorizationCode: req.query.code,
           grantType: "authorization_code",
-          clientId: settings.server.oauth2ClientId,
-          applicationIdentifier: settings.server.applicationIdentifier,
+          clientId: serverSettings.oauth2ClientId,
+          applicationIdentifier: serverSettings.applicationIdentifier,
         }
       );
 
@@ -53,14 +53,14 @@ const Oauth2Controller = (settings) => {
           updatedSessionAt: Date.now(),
           tokenStatus: "created",
         };
-        return res.redirect(settings.server.successPage || "/");
+        return res.redirect(serverSettings.successPage || "/");
       }
 
       // TODO add error page
 
       return res.json(processResponse.data);
     } catch (error) {
-      helpers.handleAxiosError(error, res, settings.server.errorPage);
+      helpers.handleAxiosError(error, res, serverSettings.errorPage);
     }
   };
 
@@ -84,18 +84,18 @@ const Oauth2Controller = (settings) => {
       const completeRequestUrl = req.baseUrl + req.path;
 
       const indexInPublicPages =
-        settings.server.publicPages.indexOf(completeRequestUrl);
+        serverSettings.publicPages.indexOf(completeRequestUrl);
 
       if (
-        completeRequestUrl === settings.server.loginPage &&
+        completeRequestUrl === serverSettings.loginPage &&
         req.session.signedUserDetails
       ) {
-        return res.redirect(settings.server.successPage || "/");
+        return res.redirect(serverSettings.successPage || "/");
       }
 
       if (
-        completeRequestUrl === settings.server.loginPage ||
-        completeRequestUrl === settings.server.errorPage ||
+        completeRequestUrl === serverSettings.loginPage ||
+        completeRequestUrl === serverSettings.errorPage ||
         indexInPublicPages > -1 ||
         allowedExt.filter((ext) => req.url.indexOf(ext) > 0).length > 0
       ) {
@@ -103,29 +103,29 @@ const Oauth2Controller = (settings) => {
       }
 
       if (!req.session.signedUserDetails) {
-        if (settings.server.loginPage) {
-          return res.redirect(settings.server.loginPage);
+        if (serverSettings.loginPage) {
+          return res.redirect(serverSettings.loginPage);
         }
         const authorizationResponse = await axios.post(
-          `${settings.server.oauth2BaseUrl}${settings.server.oauth2AuthorizeUrl}`,
-          { clientId: settings.server.oauth2ClientId }
+          `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2AuthorizeUrl}`,
+          { clientId: serverSettings.oauth2ClientId }
         );
         return res.status(302).redirect(authorizationResponse.data.content.url);
       }
       next();
     } catch (error) {
-      helpers.handleAxiosError(error, res, settings.server.errorPage);
+      helpers.handleAxiosError(error, res, serverSettings.errorPage);
     }
   };
 
   const configureSession = (app, useHttps = false) => {
     const sessionSettings = {
       saveUninitialized: false,
-      secret: settings.server.sessionSecret,
+      secret: serverSettings.sessionSecret,
       resave: false,
       cookie: {
         secure: false,
-        maxAge: settings.server.cookieMaxAge || 60000,
+        maxAge: serverSettings.cookieMaxAge || 60000,
       },
     };
 

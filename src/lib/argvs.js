@@ -39,6 +39,10 @@ const processArgv = () => {
     return argv.s || argv.settings || undefined;
   };
 
+  helper.setServerSettingsPath = (argv) => {
+    return argv.serverSettings || undefined;
+  };
+
   helper.useOauth2 = (argv) => {
     return argv.oauth2 ? true : false;
   };

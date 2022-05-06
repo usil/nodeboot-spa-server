@@ -13,17 +13,25 @@ const envSettings = new EnvSettings();
 const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
   try {
     let settings = {};
+    let serverSettings = {};
 
     if (argvSettings.settingsPath) {
       settings = await envSettings.loadJsonFile(
         path.join(processFolderPath, argvSettings.settingsPath),
         "utf8"
       );
-    } else {
-      for (var key in process.env) {
-        if (key.startsWith("SPA_VAR")) {
-          settings[key.replace("SPA_VAR_", "")] = process.env[key];
-        }
+    }
+
+    if (argvSettings.serverSettingsPath) {
+      serverSettings = await envSettings.loadJsonFile(
+        path.join(processFolderPath, argvSettings.serverSettingsPath),
+        "utf8"
+      );
+    }
+
+    for (var key in process.env) {
+      if (key.startsWith("SPA_VAR")) {
+        settings[key.replace("SPA_VAR_", "")] = process.env[key];
       }
     }
 
@@ -34,10 +42,11 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
       allowedExt,
       processFolderPath,
       argvSettings.staticFolderName,
-      settings
+      settings,
+      serverSettings
     );
 
-    const oauth2Controller = Oauth2Controller(settings);
+    const oauth2Controller = Oauth2Controller(serverSettings);
 
     if (argvSettings.useOauth2) {
       oauth2Controller.configureSession(app, argvSettings.useHttps);
