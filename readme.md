@@ -47,21 +47,22 @@ If you are using another framework, just set any folder that you need. This fold
 
 ## Parameters
 
-| parameter      | description                                                                  |
-| -------------- | ---------------------------------------------------------------------------- |
-| -p             | port of the server. Default 8080. Long: -port                                |
-| -d             | folder with assets of build operation: index.html, etc. Long: -dir           |
-| -s             | path of file with variables in json format. Long: -settings                  |
-| --allow-routes | used for angular or any spa which hits the server for html instead pure ajax |
-| --https        | use https for sessions                                                       |
-| --oauth2       | activate oauth2                                                              |
+| parameter        | description                                                                  |
+| ---------------- | ---------------------------------------------------------------------------- |
+| -p               | port of the server. Default 8080. Long: -port                                |
+| -d               | folder with assets of build operation: index.html, etc. Long: -dir           |
+| -s               | path of file with variables in json format. Long: -settings                  |
+| --allow-routes   | used for angular or any spa which hits the server for html instead pure ajax |
+| --https          | use https for sessions                                                       |
+| --oauth2         | activate oauth2                                                              |
+| --serverSettings | the settings that are only for the spa server part                           |
 
 Use `nodeboot-spa-server -h` to show the list in the shell.
 
 Here an example for angular, with variables in config.json, port 9000 and allowed routes
 
 ```json
-"start": "nodeboot-spa-server dist -s config.json -p 9000 --allow-routes",
+"start": "nodeboot-spa-server dist -s config.json -p 9000 --allow-routes | bunyan",
 ```
 
 ## What is /settings.json ?
@@ -139,7 +140,7 @@ set EMPLOYEE_API_BASE_URL=https://employee-api.com
 Add the **-s settings.json** parameter:
 
 ```json
-"start": "nodeboot-spa-server dist -s settings.json -p 9000 --allow-routes",
+"start": "nodeboot-spa-server dist -s settings.json -p 9000 --allow-routes | bunyan",
 ```
 
 Then start the spa server `npm run start` and this framework, will evaluate the variable syntax and expose you this json:
@@ -151,9 +152,13 @@ Then start the spa server `npm run start` and this framework, will evaluate the 
 }
 ```
 
+## Logger
+
+In this project the logger Bunyan is used.
+
 ## Adding oauth2
 
-Start your spa with `nodeboot-spa-server dist -s config.json -p 9000 --allow-routes --oauth2`.
+Start your spa with `nodeboot-spa-server dist/template-dashboard -s settings.json --serverSettings server-settings.json -p 8080 --allow-routes --oauth2 | bunyan`.
 
 ### Oauth2 settings with a home page
 
