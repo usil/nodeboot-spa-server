@@ -93,7 +93,7 @@ const renderController = (
 
       const exposedSettings = {
         ...settings,
-        signedUserDetails: req.session.signedUserDetails,
+        signedUserDetails: { ...req.session.signedUserDetails },
       };
 
       console.log(exposedSettings);
