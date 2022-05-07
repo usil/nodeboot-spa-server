@@ -36,6 +36,8 @@ const Oauth2Controller = (serverSettings, log) => {
         return res.redirect(serverSettings.loginPage || "/");
       }
 
+      console.log(req.query);
+
       const processResponse = await axios.post(
         `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2TokenUserEndpoint}`,
         {

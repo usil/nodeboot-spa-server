@@ -7,7 +7,7 @@ const helpers = (_colors) => {
         message: error.message,
         errorResponse: error.response.data,
         requestHeaders: error.response.headers,
-        requestData: error.config.data,
+        // requestData: error.config.data,
         requestMethod: error.config.method,
         requestUrl: error.config.url,
       };

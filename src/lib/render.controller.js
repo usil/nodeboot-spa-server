@@ -71,8 +71,6 @@ const renderController = (
         now >= expiresAt - preInterval &&
         updatedSessionAt + postInterval >= now
       ) {
-        log.info();
-
         const refreshResponse = await axios.post(
           `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2RefreshTokenUrl}`,
           {
