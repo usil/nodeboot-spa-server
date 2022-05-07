@@ -96,6 +96,8 @@ const renderController = (
         signedUserDetails: req.session.signedUserDetails,
       };
 
+      console.log(exposedSettings);
+
       delete exposedSettings["signedUserDetails"]["refreshToken"];
 
       return res.json(exposedSettings);
