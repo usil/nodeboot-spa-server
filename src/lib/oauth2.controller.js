@@ -21,7 +21,7 @@ const Oauth2Controller = (serverSettings, log) => {
         return res.redirect(serverSettings.successPage || "/");
       }
       const authorizationResponse = await axios.post(
-        `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2AuthorizeUrl}`,
+        `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2AuthorizeUrlEndpoint}`,
         { clientId: serverSettings.oauth2ClientId }
       );
       return res.status(302).redirect(authorizationResponse.data.content.url);
@@ -107,7 +107,7 @@ const Oauth2Controller = (serverSettings, log) => {
           return res.redirect(serverSettings.loginPage);
         }
         const authorizationResponse = await axios.post(
-          `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2AuthorizeUrl}`,
+          `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2AuthorizeUrlEndpoint}`,
           { clientId: serverSettings.oauth2ClientId }
         );
         return res.status(302).redirect(authorizationResponse.data.content.url);

@@ -14,7 +14,7 @@ simple http server for any spa developed with react, angular, vue, etc with some
 
 ## Requirements
 
-- nodejs >= 10
+- nodejs >= 14
 
 ## Usage
 
@@ -140,7 +140,7 @@ set EMPLOYEE_API_BASE_URL=https://employee-api.com
 Add the **-s settings.json** parameter:
 
 ```json
-"start": "nodeboot-spa-server dist -s settings.json -p 9000 --allow-routes | bunyan",
+"start": "nodeboot-spa-server dist -s settings.json -p 9000 --allow-routes",
 ```
 
 Then start the spa server `npm run start` and this framework, will evaluate the variable syntax and expose you this json:
@@ -152,75 +152,15 @@ Then start the spa server `npm run start` and this framework, will evaluate the 
 }
 ```
 
-## Logger
+## Security
 
-In this project the logger Bunyan is used.
-
-## Adding oauth2
-
-Start your spa with `nodeboot-spa-server dist/template-dashboard -s settings.json --serverSettings server-settings.json -p 8080 --allow-routes --oauth2 | bunyan`.
-
-### Oauth2 settings with a home page
-
-The auth information result is showed in the `settings.json` end point with `signedUserDetails`.
-
-You should enter the success page where it will go after the successfully login.
-
-You need to create a `server-settings.json` file with the following variables:
-
-```json
-{
-  "cookieMaxAge": 60000,
-  "loginPage": "/login",
-  "errorPage": "/error",
-  "successPage": "/success",
-  "publicPages": [],
-  "applicationIdentifier": "web1",
-  "oauth2TimerRefreshInterval": "${SECURITY_OAUTH2_TIME_INTERVAL}",
-  "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
-  "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
-  "sessionSecret": "${SESSION_SECRET}",
-  "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-  "oauth2TokenUserEndpoint": "${SECURITY_OAUTH2_TOKEN_USER_URL}",
-  "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
-}
-```
-
-### Added end points for oauth2
-
-| Endpoint       | Method | Description         |
-| -------------- | ------ | ------------------- |
-| /oauth2/logout | GET    | Closes the session  |
-| /oauth2/login  | GET    | Creates the session |
-
-### Oauth2 settings no home page
-
-Any request to any end point will activate the automatic login. Just do not include the login page.
-
-You need to create a `server-settings.json` file with the following variables:
-
-```json
-{
-  "cookieMaxAge": 60000,
-  "errorPage": "/error",
-  "successPage": "/success",
-  "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
-  "sessionSecret": "${SESSION_SECRET}",
-  "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-  "oauth2CallbackProcessor": "${SECURITY_OAUTH2_CALLBACK_PROCESSOR}",
-  "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}"
-}
-```
+By default, there is no security. If you are able to use oauth2 directly on the spa (angular, react, vue), then do it. If you want to hide the oauth2 flow from the spa, you could use this plugin and customize it according to your needs:
 
 ## /settings.json at developer stage
 
-The previous paragraphs showed how use spa server for production environment (npm run build and npm run start) but what happen in the local developer workspace?
+The previous paragraphs showed how to use spa server for production environment (npm run build and npm run start) but what happen in the local developer workspace?
 
 Follow these steps to configure a /settings.json at developer stage:
-
-- Install the [advanced settings package](https://github.com/nodeboot/advanced-settings):
-
-`npm install https://github.com/nodeboot/advanced-settings --save-dev`
 
 - Add a settings.json file in the root. For more info about this file take a look at https://github.com/nodeboot/advanced-settings/blob/main/README.md. You could use syntax variable ${VAR} in this file:
 
@@ -232,8 +172,8 @@ Follow these steps to configure a /settings.json at developer stage:
 
 Specific configurations by framework:
 
-- Angular 12 & 13
-- https://github.com/usil/nodeboot-spa-server/wiki/Dev-Mode-:-Angular-12
+- Angular 12 : https://github.com/usil/nodeboot-spa-server/wiki/Dev-Mode-:-Angular-12
+- Angular 13 : https://github.com/usil/nodeboot-spa-server/wiki/Dev-Mode-:-Angular-13
 
 ## License
 

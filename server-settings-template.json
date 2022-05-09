@@ -7,10 +7,10 @@
   "publicPages": [],
   "applicationIdentifier": "web1",
   "oauth2BaseUrl": "${SECURITY_OAUTH2_BASE_URL}",
-  "oauth2RefreshTokenUrl": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
-  "oauth2ClientId": "${OAUTH2_CLIENT_ID}",
+  "oauth2RefreshTokenEndpoint": "${SECURITY_OAUTH2_REFRESH_TOKEN_URL}",
   "oauth2TokenUserEndpoint": "${SECURITY_OAUTH2_TOKEN_USER_URL}",
-  "oauth2AuthorizeUrl": "${SECURITY_OAUTH2_AUTHORIZE_URL}",
+  "oauth2AuthorizeUrlEndpoint": "${SECURITY_OAUTH2_AUTHORIZE_URL}",
   "oauth2MaxAllowedIdleTime": "${SECURITY_OAUTH2_MAX_SECONDS_ALLOWED_FOR_IDLE_USER}",
-  "oauth2RefreshTokenBeforeExpirationTime": "${SECURITY_OAUTH2_REFRESH_TOKEN_SECONDS_BEFORE_EXPIRATION}"
+  "oauth2SecondsForRefreshTokenBeforeExpiration": "${SECURITY_OAUTH2_REFRESH_TOKEN_SECONDS_BEFORE_EXPIRATION}",
+  "oauth2ClientId": "${OAUTH2_CLIENT_ID}"
 }
