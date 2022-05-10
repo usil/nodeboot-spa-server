@@ -1,9 +1,4 @@
-const colors = require("colors/safe");
 const path = require("path");
-const axios = require("axios").default;
-const Helpers = require("./helpers");
-
-const helpers = Helpers(colors);
 
 const renderController = (
   allowedExt,
@@ -23,20 +18,11 @@ const renderController = (
     }
   };
 
-  const renderSettingJson = async (req, res) => {
-    if (!req.session || !req.session.signedUserDetails) {
-      const normalSettings = {
-        ...settings,
-      };
-      return res.json(normalSettings);
-    }
-
+  const renderSettingJson = async (_req, res) => {
     const exposedSettings = {
       ...settings,
-      signedUserDetails: { ...req.session.signedUserDetails },
+      ...res.locals.extraSettings,
     };
-
-    delete exposedSettings["signedUserDetails"]["refreshToken"];
 
     return res.json(exposedSettings);
   };

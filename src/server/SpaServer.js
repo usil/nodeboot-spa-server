@@ -3,7 +3,6 @@
 "use strict";
 
 const express = require("express");
-const colors = require("colors/safe");
 const argvs = require("../lib/argvs.js");
 const startServer = require("./serve.js");
 const app = express();
@@ -16,8 +15,6 @@ const settings = {
   port: argvs().getPort(argv),
   settingsPath: argvs().setSettingsPath(argv),
   serverSettingsPath: argvs().setServerSettingsPath(argv),
-  useOauth2: argvs().useOauth2(argv),
-  useHttps: argvs().useHttps(argvs),
 };
 
 if (process.platform === "win32") {

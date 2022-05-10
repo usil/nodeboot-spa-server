@@ -3,32 +3,39 @@
 require("dotenv").config();
 const processFolderPath = process.cwd();
 const path = require("path");
+const fs = require("fs/promises");
 const EnvSettings = require("advanced-settings").EnvSettings;
-const colors = require("colors/safe");
 const express = require("express");
 const RenderController = require("../lib/render.controller");
-const Oauth2Controller = require("../lib/oauth2.controller");
 const envSettings = new EnvSettings();
-const bunyan = require("bunyan");
-const log = bunyan.createLogger({
-  name: "spa-server",
-  serializers: bunyan.stdSerializers,
+
+const log4js = require("log4js");
+
+log4js.configure({
+  appenders: {
+    console: { type: "console" },
+  },
+  categories: {
+    default: { appenders: ["console"], level: "trace" },
+  },
 });
 
+const logger = log4js.getLogger();
+
 const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
+  logger.info("Configuring server");
   try {
     let settings = {};
     let serverSettings = {};
 
-    process.on("SIGINT", function () {
-      log.warn("Server stopped.");
-      process.exit();
-    });
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-    process.on("SIGTERM", function () {
-      log.warn("Server stopped.");
-      process.exit();
-    });
+    for (var key in process.env) {
+      if (key.startsWith("SPA_VAR")) {
+        settings[key.replace("SPA_VAR_", "")] = process.env[key];
+      }
+    }
 
     if (argvSettings.settingsPath) {
       settings = await envSettings.loadJsonFile(
@@ -42,59 +49,49 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
         path.join(processFolderPath, argvSettings.serverSettingsPath),
         "utf8"
       );
-    }
 
-    for (var key in process.env) {
-      if (key.startsWith("SPA_VAR")) {
-        settings[key.replace("SPA_VAR_", "")] = process.env[key];
+      logger.level = serverSettings.loggerLevel || "trace";
+
+      const plugins = serverSettings.plugins;
+
+      if (plugins.length > 0) {
+        const localPackageRaw = await fs.readFile(
+          path.join(processFolderPath, "package.json"),
+          "utf8"
+        );
+
+        const localPackage = JSON.parse(localPackageRaw);
+
+        for (const plugin of plugins) {
+          if (localPackage.dependencies[plugin.module] === undefined) {
+            throw new Error(`Module for plugin ${plugin.module} was not found`);
+          }
+
+          logger.info(`Configuring ${plugin.module} plugin ...`);
+
+          const pluginStartFunction = require(path.join(
+            processFolderPath,
+            "node_modules",
+            plugin.module
+          ));
+
+          pluginStartFunction(app, serverSettings, logger);
+
+          logger.info(`${plugin.module} plugin added`);
+        }
       }
     }
-
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
 
     const renderController = RenderController(
       allowedExt,
       processFolderPath,
       argvSettings.staticFolderName,
-      settings,
-      serverSettings,
-      log
+      settings
     );
-
-    const oauth2Controller = Oauth2Controller(serverSettings, log);
-
-    if (argvSettings.useOauth2) {
-      oauth2Controller.configureSession(app, argvSettings.useHttps);
-
-      app.get("/ping", oauth2Controller.ping);
-
-      app.get("/oauth2/callback", oauth2Controller.callback);
-
-      app.get("/oauth2/logout", oauth2Controller.logOut);
-
-      app.get("/oauth2/login", oauth2Controller.logIn);
-
-      app.post("/oauth2/token/refresh", oauth2Controller.refreshToken);
-    }
 
     app.get("/settings.json", renderController.renderSettingJson);
 
-    if (allowRoutes && argvSettings.useOauth2) {
-      app.get(
-        "*",
-        oauth2Controller.oauth2Protection,
-        renderController.allowedRoutesRender // render angular
-      );
-    } else if (!allowRoutes && argvSettings.useOauth2) {
-      app.use(
-        "/",
-        oauth2Controller.oauth2Protection,
-        express.static(
-          path.join(processFolderPath, `${argvSettings.staticFolderName}`)
-        )
-      );
-    } else if (allowRoutes) {
+    if (allowRoutes) {
       app.get("*", renderController.allowedRoutesRender);
     } else {
       app.use(
@@ -106,12 +103,12 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
     }
 
     const server = app.listen(argvSettings.port, () => {
-      log.info(`Listening in http://localhost:${argvSettings.port}`);
+      logger.info(`Listening in http://localhost:${argvSettings.port}`);
     });
 
     return { server, app };
   } catch (error) {
-    log.error(error);
+    logger.fatal(error);
     process.exit(-1);
   }
 };

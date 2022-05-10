@@ -36,6 +36,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "jest-coverage-badges": "^1.1.2",
+    "log4js": "^6.4.6",
     "minimist": "^1.2.6",
     "portfinder": "^1.0.28"
   },

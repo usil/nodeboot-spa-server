@@ -43,10 +43,6 @@ const processArgv = () => {
     return argv.serverSettings || undefined;
   };
 
-  helper.useOauth2 = (argv) => {
-    return argv.oauth2 ? true : false;
-  };
-
   helper.useHttps = (argv) => {
     return argv.https ? true : false;
   };
