@@ -16,11 +16,12 @@ log4js.configure({
     console: { type: "console" },
   },
   categories: {
+    ["spa-server"]: { appenders: ["console"], level: "trace" },
     default: { appenders: ["console"], level: "trace" },
   },
 });
 
-const logger = log4js.getLogger();
+const logger = log4js.getLogger("spa-server");
 
 const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
   logger.info("Configuring server");
@@ -54,7 +55,7 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
 
       const plugins = serverSettings.plugins;
 
-      if (plugins.length > 0) {
+      if (plugins && plugins.length > 0) {
         const localPackageRaw = await fs.readFile(
           path.join(processFolderPath, "package.json"),
           "utf8"

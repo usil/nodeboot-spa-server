@@ -19,10 +19,14 @@ const renderController = (
   };
 
   const renderSettingJson = async (_req, res) => {
-    const exposedSettings = {
+    let exposedSettings = {
       ...settings,
       ...res.locals.extraSettings,
     };
+
+    if (res.locals.extraSettings) {
+      exposedSettings = { ...exposedSettings, ...res.locals.extraSettings };
+    }
 
     return res.json(exposedSettings);
   };
