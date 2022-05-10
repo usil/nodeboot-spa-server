@@ -6,6 +6,15 @@ const Helpers = require("./helpers");
 const helpers = Helpers(colors);
 
 const Oauth2Controller = (serverSettings, log) => {
+  const ping = (req, res) => {
+    if (!req.session || !req.session.signedUserDetails) {
+      return res.send(0);
+    }
+    req.session.signedUserDetails.tokenStatus = "stable";
+    req.session.signedUserDetails.updatedSessionAt = Date.now();
+    return res.send(req.session.signedUserDetails.updatedSessionAt);
+  };
+
   const logOut = (req, res) => {
     req.session.destroy((err) => {
       if (err) {
@@ -27,6 +36,71 @@ const Oauth2Controller = (serverSettings, log) => {
       return res.status(302).redirect(authorizationResponse.data.content.url);
     } catch (error) {
       helpers.handleAxiosError(error, res, log, serverSettings.errorPage);
+    }
+  };
+
+  const refreshToken = async (req, res) => {
+    try {
+      const idleTime = parseInt(serverSettings.oauth2MaxAllowedIdleTime) * 1000;
+
+      const updatedSessionAt = req.session.signedUserDetails.updatedSessionAt;
+
+      const now = Date.now();
+
+      if (updatedSessionAt + idleTime < now) {
+        const destroy$ = () => {
+          return new Promise((resolve, reject) => {
+            req.session.destroy((err) => {
+              if (err) {
+                reject(err);
+              }
+              resolve();
+            });
+          });
+        };
+        await destroy$();
+        return res.json({
+          message: "Session timeout due to idle time",
+          code: 403001,
+        });
+      }
+
+      const refreshResponse = await axios.post(
+        `${serverSettings.oauth2BaseUrl}${serverSettings.oauth2RefreshTokenEndpoint}`,
+        {
+          refreshToken: req.session.signedUserDetails.refreshToken,
+          grantType: "refresh_token",
+        }
+      );
+
+      req.session.signedUserDetails.tokenStatus = "renewed";
+      req.session.signedUserDetails.generatedAt = Date.now();
+      req.session.signedUserDetails.accessToken =
+        refreshResponse.data.content.accessToken;
+      req.session.signedUserDetails.expiresIn =
+        refreshResponse.data.content.expiresIn;
+
+      return res.json({
+        message: "New token generated",
+        code: 200001,
+        content: {
+          accessToken: refreshResponse.data.content.accessToken,
+        },
+      });
+    } catch (error) {
+      log.error(error);
+      if (error.response) {
+        log.error(error.response.data);
+        log.error(error.response.status);
+        log.error(error.response.headers);
+        return res.json({
+          message: error.message,
+          responseData: error.response.data,
+          responseStatus: error.response.status,
+          responseHeader: error.response.headers,
+        });
+      }
+      return res.json({ message: error.message });
     }
   };
 
@@ -137,7 +211,15 @@ const Oauth2Controller = (serverSettings, log) => {
     app.use(session(sessionSettings));
   };
 
-  return { logOut, callback, oauth2Protection, configureSession, logIn };
+  return {
+    logOut,
+    callback,
+    oauth2Protection,
+    configureSession,
+    logIn,
+    ping,
+    refreshToken,
+  };
 };
 
 module.exports = Oauth2Controller;

@@ -67,11 +67,15 @@ const startServer = async (app, allowedExt, argvSettings, allowRoutes) => {
     if (argvSettings.useOauth2) {
       oauth2Controller.configureSession(app, argvSettings.useHttps);
 
+      app.get("/ping", oauth2Controller.ping);
+
       app.get("/oauth2/callback", oauth2Controller.callback);
 
       app.get("/oauth2/logout", oauth2Controller.logOut);
 
       app.get("/oauth2/login", oauth2Controller.logIn);
+
+      app.post("/oauth2/token/refresh", oauth2Controller.refreshToken);
     }
 
     app.get("/settings.json", renderController.renderSettingJson);
