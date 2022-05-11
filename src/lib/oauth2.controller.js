@@ -85,7 +85,7 @@ const Oauth2Controller = (serverSettings, log) => {
 
       const indexInPublicPages = serverSettings.publicPages.findIndex(
         (path) => {
-          completeRequestUrl.startsWith(path);
+          return completeRequestUrl.startsWith(path);
         }
       );
 
