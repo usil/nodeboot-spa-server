@@ -29,9 +29,6 @@
   "homePage": "https://github.com/nodeboot/nodeboot-spa-server#readme",
   "dependencies": {
     "advanced-settings": "git+https://github.com/nodeboot/advanced-settings.git",
-    "axios": "^0.26.1",
-    "bunyan": "^1.8.15",
-    "colors": "^1.4.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",

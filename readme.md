@@ -152,9 +152,13 @@ Then start the spa server `npm run start` and this framework, will evaluate the 
 }
 ```
 
-## Security
+## Plugins
 
-By default, there is no security. If you are able to use oauth2 directly on the spa (angular, react, vue), then do it. If you want to hide the oauth2 flow from the spa, you could use this plugin and customize it according to your needs:
+You can add any functionality that you want to the spa-server using plugins, to add them first install the plugin in the SPA project package then in the server-`settings.json` file put the following:
+
+```json
+  "plugins": [{ "module": "usil-oauth" }],
+```
 
 ## /settings.json at developer stage
 
