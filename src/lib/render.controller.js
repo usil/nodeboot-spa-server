@@ -26,6 +26,17 @@ const renderController = (
   };
 
   const renderSettingJson = async (req, res) => {
+    const destroy$ = () => {
+      return new Promise((resolve, reject) => {
+        req.session.destroy((err) => {
+          if (err) {
+            reject(err);
+          }
+          resolve();
+        });
+      });
+    };
+
     try {
       if (!req.session || !req.session.signedUserDetails) {
         const normalSettings = {
@@ -42,7 +53,8 @@ const renderController = (
       const expiresAt = expiresIn + generatedAt;
 
       const preInterval =
-        parseInt(serverSettings.oauth2SecondsForRefreshTokenBeforeExpiration) * 1000;
+        parseInt(serverSettings.oauth2SecondsForRefreshTokenBeforeExpiration) *
+        1000;
 
       const postInterval =
         parseInt(serverSettings.oauth2MaxAllowedIdleTime) * 1000;
@@ -52,19 +64,9 @@ const renderController = (
       const now = Date.now();
 
       if (updatedSessionAt + postInterval < now) {
-        const destroy$ = () => {
-          return new Promise((resolve, reject) => {
-            req.session.destroy((err) => {
-              if (err) {
-                reject(err);
-              }
-              resolve();
-            });
-          });
-        };
+        log.error("User max idle time surpassed");
         await destroy$();
-        const expiredSettings = { ...settings };
-        return res.json(expiredSettings);
+        return res.json({ ...settings });
       }
 
       if (
@@ -100,7 +102,22 @@ const renderController = (
 
       return res.json(exposedSettings);
     } catch (error) {
-      helpers.handleAxiosError(error, res, log);
+      destroy$().then(() => {
+        if (error.response) {
+          log.error(error.message, {
+            message: error.message,
+            errorResponse: error.response.data,
+            requestHeaders: error.response.headers,
+            requestData: error.config.data,
+            requestMethod: error.config.method,
+            requestUrl: error.config.url,
+          });
+        } else {
+          log.error(error);
+        }
+
+        return res.json({ ...settings });
+      });
     }
   };
 

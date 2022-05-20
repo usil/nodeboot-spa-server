@@ -1,7 +1,6 @@
 const helpers = (_colors) => {
   const handleAxiosError = (error, res, log, errorPage) => {
     let errorData = {};
-    log.error(error);
     if (error.response) {
       errorData = {
         message: error.message,
@@ -12,6 +11,8 @@ const helpers = (_colors) => {
         requestUrl: error.config.url,
       };
       log.error(errorData);
+    } else {
+      log.error(error);
     }
     if (errorPage) {
       return res.redirect(errorPage + `?code=500`);
