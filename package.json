@@ -1,8 +1,8 @@
 {
   "name": "nodeboot-spa-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "http server for any spa developed with react, angular, vue, etc with some few useful features",
-  "main": "index.js",
+  "main": "src/index.js",
   "bin": {
     "nodeboot-spa-server": "src/server/SpaServer.js"
   },
@@ -28,12 +28,12 @@
   },
   "homepage": "https://github.com/nodeboot/nodeboot-spa-server#readme",
   "dependencies": {
-    "advanced-settings": "git+https://github.com/nodeboot/advanced-settings.git",
     "colors": "^1.4.0",
     "express": "^4.17.1",
     "jest-coverage-badges": "^1.1.2",
     "minimist": "^1.2.5",
-    "portfinder": "^1.0.28"
+    "portfinder": "^1.0.28",
+    "advanced-settings": "github:nodeboot/advanced-settings#1.0.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
